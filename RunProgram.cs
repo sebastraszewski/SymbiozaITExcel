@@ -26,9 +26,7 @@ namespace SymbiozaITExcel
                 Console.WriteLine("Wciśnij 'Esc', jeśli chcesz wyjść.");
                 if (Console.ReadKey().Key.ToString() == "Escape")
                 {
-                    ExcelFile.Instance.Book.Close(0);
-                    Marshal.ReleaseComObject(ExcelFile.Instance.Book);
-                    ExcelFile.Instance.Application.Quit();
+                    Program.closeApp();
                     Environment.Exit(0);
                 }
                 else
@@ -62,28 +60,21 @@ namespace SymbiozaITExcel
 
         public static void CreateNew()
         {
-            Console.WriteLine("Wciśnij 'Enter', jeśli chcesz rozpocząć od nowa.");
+            Console.WriteLine("Wciśnij 'Enter', jeśli chcesz rozpocząć od nowa albo 'Escape', by wyjść z programu.");
             if (Console.ReadKey().Key.ToString() == "Enter")
             {
                 fullfilNewRowInExcel();
             }
+            else if (Console.ReadKey().Key.ToString() == "Escape")
+            {
+                Program.closeApp();
+                Environment.Exit(0);
+            }
             else
             {
-                Console.WriteLine("Jeśli chcesz wyjść, wciśnij 'Esc'");
-                {
-                    if (Console.ReadKey().Key.ToString() == "Escape")
-                    {
-                        Program.closeApp();
-                        Environment.Exit(0);
-                    }
-                    else
-                    {
-                        fullfilNewRowInExcel();
-                    }
-                }
-
-
+                CreateNew();
             }
         }
     }
 }
+
