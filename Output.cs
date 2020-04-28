@@ -51,7 +51,7 @@ namespace SymbiozaITExcel
                 ExcelFile.Instance.Sheet.Cells[lastRow, 4].Value = Input.Description;
                 ExcelFile.Instance.Sheet.Cells[lastRow, 5].Value = Input.Amount;
                 ExcelFile.Instance.Application.DisplayAlerts = false;
-                ExcelFile.Instance.Book.SaveAs(ExcelFile.Instance.PathFileName);
+                ExcelFile.Instance.Book.SaveAs(ExcelFile.Instance.PathFileName, XlSaveAsAccessMode.xlExclusive);
             }
             catch (Exception)
             {
