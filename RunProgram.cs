@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SymbiozaITExcel
 {
@@ -26,7 +20,6 @@ namespace SymbiozaITExcel
                 Console.WriteLine("Wciśnij 'Esc', jeśli chcesz wyjść.");
                 if (Console.ReadKey().Key.ToString() == "Escape")
                 {
-                    Program.closeApp();
                     Environment.Exit(0);
                 }
                 else
@@ -43,7 +36,7 @@ namespace SymbiozaITExcel
             Input input = new Input();
             input.CollectInfoAboutRow();
             Output output = new Output(input);
-            Console.WriteLine("Wciśnij 'Enter', aby zapisać dane do arkuszu excel - 'Skoroszyt.xslx'.");
+            Console.WriteLine("Wciśnij 'Enter', aby zapisać dane do arkuszu excel - 'Skoroszyt.xls'.");
             if (Console.ReadKey().Key.ToString() == "Enter")
             {
                 output.SaveExcelFile();
@@ -67,7 +60,6 @@ namespace SymbiozaITExcel
             }
             else if (Console.ReadKey().Key.ToString() == "Escape")
             {
-                Program.closeApp();
                 Environment.Exit(0);
             }
             else

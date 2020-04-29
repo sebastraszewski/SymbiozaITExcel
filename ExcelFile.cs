@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Office.Interop.Excel;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+
 
 namespace SymbiozaITExcel
 {
     public class ExcelFile
     {
-
-        public Worksheet Sheet { get; set; }
-        public  Workbook Book { get; set; }
-        public  Microsoft.Office.Interop.Excel.Application Application { get; set; }
+        public ISheet Sheet { get; set; }
+        public IWorkbook Book { get; set; }
+        public FileStream FS { get; set; }
         public string PathFileName { get; set; }
         private static ExcelFile instance = null;
         private static readonly object padlock = new object();
@@ -28,25 +23,42 @@ namespace SymbiozaITExcel
             {
                 lock (padlock)
                 {
-                    if (instance == null)
+                    if (instance == null || instance.Book == null)
                     {
-                        instance = new ExcelFile();
-                        instance.PathFileName = Path.Combine(Environment.CurrentDirectory, "Skoroszyt.xlsx");
-                        instance.Application = new Microsoft.Office.Interop.Excel.Application();
-                        if (!System.IO.File.Exists(instance.PathFileName))
-                        {
-                            instance.Book = instance.Application.Workbooks.Add();
-                        }
-                        else
-                        {
-                            instance.Book = instance.Application.Workbooks.Open(instance.PathFileName);
-                        }
-                        instance.Sheet = (Worksheet)instance.Book.Worksheets.get_Item(1);
-
+                        connectToFile();
+                        
+                        return instance;
+                         
                     }
-                    return instance;
+                    else
+                    {
+                        return instance;
+                    }
+                    
                 }
             }
+        }
+
+        private static void connectToFile()
+        {
+            instance = new ExcelFile();
+            instance.PathFileName = Path.Combine(Environment.CurrentDirectory, "Skoroszyt.xls");
+            if (File.Exists(instance.PathFileName))
+            {
+                using (FileStream fs = new FileStream(instance.PathFileName, FileMode.Open, FileAccess.Read))
+                {
+                    instance.Book = new HSSFWorkbook(fs);
+                    instance.Sheet = instance.Book.GetSheetAt(0);
+                }
+            }
+            else
+            {
+
+                instance.Book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+                instance.Sheet = instance.Book.CreateSheet("Symbioza");
+            }
+            
+            
         }
     }
 }

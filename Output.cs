@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Office.Interop.Excel;
+using NPOI.SS.UserModel;
 
 namespace SymbiozaITExcel
 {
@@ -19,10 +14,10 @@ namespace SymbiozaITExcel
         {
             get 
             {
-                Range lastCell = ExcelFile.Instance.Sheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell, Type.Missing);
-                return lastCell.Row; 
+                int lastCell = ExcelFile.Instance.Sheet.LastRowNum;
+                return lastCell; 
             }
-            set { lastRow = value; }
+            set { lastRow = ExcelFile.Instance.Sheet.LastRowNum; }
         }
 
         
@@ -36,22 +31,40 @@ namespace SymbiozaITExcel
             try
             {
                 int lastRow = LastRow + 1;
-                Lp = lastRow - 1;
+                Lp = lastRow;
                 if (Lp == 1)
                 {
-                    ExcelFile.Instance.Sheet.Cells[1, 1].Value = "Lp.";
-                    ExcelFile.Instance.Sheet.Cells[1, 2].Value = "Data";
-                    ExcelFile.Instance.Sheet.Cells[1, 3].Value = "Numer zlecenia";
-                    ExcelFile.Instance.Sheet.Cells[1, 4].Value = "Opis";
-                    ExcelFile.Instance.Sheet.Cells[1, 5].Value = "Kwota";
+                    IRow firstRow = ExcelFile.Instance.Sheet.CreateRow(0);
+                    firstRow.CreateCell(0).SetCellValue("Lp.");
+                    firstRow.CreateCell(1).SetCellValue("Data");
+                    firstRow.CreateCell(2).SetCellValue("Numer zlecenia");
+                    firstRow.CreateCell(3).SetCellValue("Opis");
+                    firstRow.CreateCell(4).SetCellValue("Kwota");
+
                 }
-                ExcelFile.Instance.Sheet.Cells[lastRow, 1].Value = Lp;
-                ExcelFile.Instance.Sheet.Cells[lastRow, 2].Value = Input.Date;
-                ExcelFile.Instance.Sheet.Cells[lastRow, 3].Value = Input.Order;
-                ExcelFile.Instance.Sheet.Cells[lastRow, 4].Value = Input.Description;
-                ExcelFile.Instance.Sheet.Cells[lastRow, 5].Value = Input.Amount;
-                ExcelFile.Instance.Application.DisplayAlerts = false;
-                ExcelFile.Instance.Book.SaveAs(ExcelFile.Instance.PathFileName, XlSaveAsAccessMode.xlExclusive);
+                IRow row = ExcelFile.Instance.Sheet.CreateRow(lastRow);
+                row.CreateCell(0).SetCellValue(Lp);
+                row.CreateCell(1).SetCellValue(Input.Date);
+                row.CreateCell(2).SetCellValue(Input.Order);
+                row.CreateCell(3).SetCellValue(Input.Description);
+                row.CreateCell(4).SetCellValue(Input.Amount);
+         
+
+                if (!File.Exists(ExcelFile.Instance.PathFileName))
+                {
+                    using (FileStream fs = new FileStream(ExcelFile.Instance.PathFileName, FileMode.Create, FileAccess.Write))
+                    {
+                        ExcelFile.Instance.Book.Write(fs);
+                    }
+                }
+                else
+                {
+                    using (FileStream fs = new FileStream(ExcelFile.Instance.PathFileName, FileMode.Open, FileAccess.Write))
+                    {
+                        ExcelFile.Instance.Book.Write(fs);
+                    }
+                }
+              
             }
             catch (Exception)
             {

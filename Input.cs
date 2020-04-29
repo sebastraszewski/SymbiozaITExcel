@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SymbiozaITExcel
 {

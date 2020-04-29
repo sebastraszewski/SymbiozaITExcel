@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Office.Interop.Excel;
 
 namespace SymbiozaITExcel
 {
@@ -15,10 +14,10 @@ namespace SymbiozaITExcel
         public bool findOrderInExcelFile(int order)
         {
             AllOrders = new List<String>();
-            Range lastCell = ExcelFile.Instance.Sheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell, Type.Missing);
-            for (int row = 2; row < lastCell.Row+1; row++)
+            int lastCell = ExcelFile.Instance.Sheet.LastRowNum;
+            for (int row = 1; row < lastCell+1; row++)
             {
-                AllOrders.Add(ExcelFile.Instance.Sheet.Cells[row, 3].Value.ToString());
+                AllOrders.Add(ExcelFile.Instance.Sheet.GetRow(row).GetCell(2).ToString());
             }
             if (AllOrders != null)
             {
