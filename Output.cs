@@ -14,7 +14,7 @@ namespace SymbiozaITExcel
         {
             get 
             {
-                int lastCell = ExcelFile.Instance.Sheet.LastRowNum;
+                int lastCells = ExcelFile.Instance.Sheet.LastRowNum;
                 return lastCell; 
             }
             set { lastRow = ExcelFile.Instance.Sheet.LastRowNum; }
